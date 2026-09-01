@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beirut Kebab — Smalgangen 44, Oslo</title>
+
+<!--
+  ============================================================
+  BEIRUT KEBAB — demo site (Orhan)
+  ------------------------------------------------------------
+  HOW TO SWAP IMAGES:
+  Every image is a <div class="img-placeholder"> with a
+  background pattern. Replace it with:
+      <img src="your-photo.jpg" alt="...">
+  and give it the same class list so it keeps its sizing.
+  Search this file for "TODO IMAGE" to find every spot.
+
+  COLORS / FONTS: all defined once in :root at the top of the
+  <style> block below — change there, it updates everywhere.
+
+  SECTIONS: Home / Menu / Find Us / About — nav links jump to
+  each section's id. Easy to split into separate pages later
+  if you want real multi-page routing instead of one scroller.
+  ============================================================
+-->
+
+<style>
+  :root {
+    /* ---- palette: late-night grill house ---- */
+    --charcoal:     #1C1712;   /* near-black background, warm not blue */
+    --charcoal-2:   #251E17;   /* slightly lighter panel */
+    --ember:        #C4501F;  /* char / grill red-orange */
+    --saffron:      #E3A857;  /* spice accent, warm gold */
+    --cream:        #EFE6D6;  /* light section background */
+    --cream-2:      #E4D7BF;
+    --ink:          #241B12;  /* dark text on cream */
+    --paper:        #F7F1E6;  /* near-white text on dark */
+
+    --display: "Fraunces", Georgia, serif;
+    --body: "Work Sans", -apple-system, sans-serif;
+  }
+
+  @font-face {
+    font-family: "Fraunces";
+    src: local("Fraunces");
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img, .img-placeholder { max-width: 100%; display: block; }
+
+  /* generic placeholder art — swap these divs for <img> tags */
+  .img-placeholder {
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,.06) 0 2px, transparent 2px 14px),
+      linear-gradient(160deg, #8a4a2a, #4a2517);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(247,241,230,.75);
+    font-family: var(--body);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 2px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ---------------- NAV ---------------- */
+  header.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--charcoal);
+    border-bottom: 1px solid rgba(227,168,87,.18);
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-name {
+    font-family: var(--display);
+    color: var(--paper);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .nav-name span { color: var(--saffron); }
+  .nav-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--paper);
+    opacity: 0.75;
+    font-size: 0.95rem;
+    transition: opacity 0.15s ease;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-call {
+    background: var(--ember);
+    color: var(--paper);
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .nav-toggle { display: none; }
+
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+    .nav-toggle {
+      display: block;
+      background: none;
+      border: 1px solid rgba(247,241,230,.3);
+      color: var(--paper);
+      padding: 0.4rem 0.7rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: var(--charcoal);
+      padding: 1rem 1.5rem 1.5rem;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(227,168,87,.18);
+    }
+  }
+
+  /* ---------------- HERO ---------------- */
+  .hero {
+    background: var(--charcoal);
+    color: var(--paper);
+    padding: 4.5rem 0 5rem;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 820px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 2.25rem; }
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    font-weight: 600;
+    margin-bottom: 1.1rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--saffron);
+  }
+  .hero p.lede {
+    font-size: 1.1rem;
+    color: rgba(247,241,230,.8);
+    max-width: 34ch;
+    margin-bottom: 1.75rem;
+  }
+  .hero-actions { display: flex; gap: 0.85rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .btn-primary { background: var(--saffron); color: var(--ink); }
+  .btn-ghost {
+    border: 1px solid rgba(247,241,230,.35);
+    color: var(--paper);
+  }
+  .hero-facts {
+    display: flex;
+    gap: 1.75rem;
+    margin-top: 2.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(247,241,230,.15);
+  }
+  .hero-facts div { font-size: 0.85rem; color: rgba(247,241,230,.65); }
+  .hero-facts strong {
+    display: block;
+    font-family: var(--display);
+    font-size: 1.15rem;
+    color: var(--paper);
+    font-weight: 600;
+  }
+
+  .hero-img { /* TODO IMAGE: signature dish, e.g. shawarma being sliced or the pizza */
+    aspect-ratio: 4 / 5;
+    border-radius: 4px;
+  }
+
+  /* ---------------- SECTION HEADERS ---------------- */
+  section { padding: 4.5rem 0; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+    font-weight: 600;
+  }
+  .section-head p {
+    max-width: 40ch;
+    color: rgba(36,27,18,.65);
+    font-size: 0.98rem;
+  }
+
+  /* ---------------- STRIP: hours/address quick bar ---------------- */
+  .quickbar {
+    background: var(--saffron);
+    color: var(--ink);
+  }
+  .quickbar .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .quickbar .dot { opacity: 0.5; font-weight: 400; }
+
+  /* ---------------- MENU ---------------- */
+  .menu-section { background: var(--cream); }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 3rem;
+  }
+  @media (max-width: 720px) {
+    .menu-grid { grid-template-columns: 1fr; }
+  }
+  .menu-cat h3 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ember);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--cream-2);
+  }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dashed rgba(36,27,18,.15);
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item-name { font-weight: 600; font-size: 0.98rem; }
+  .menu-item-desc {
+    font-size: 0.85rem;
+    color: rgba(36,27,18,.6);
+    margin-top: 0.15rem;
+  }
+  .menu-item-price {
+    font-family: var(--display);
+    font-weight: 600;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+  .menu-note {
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: rgba(36,27,18,.55);
+  }
+
+  /* ---------------- FIND US ---------------- */
+  .findus-section { background: var(--charcoal); color: var(--paper); }
+  .findus-section .section-head p { color: rgba(247,241,230,.6); }
+  .findus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .findus-grid { grid-template-columns: 1fr; }
+  }
+  .map-embed {
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 320px;
+    border: 1px solid rgba(227,168,87,.25);
+  }
+  .map-embed iframe { width: 100%; height: 100%; min-height: 320px; border: 0; }
+
+  .info-card {
+    background: var(--charcoal-2);
+    border: 1px solid rgba(227,168,87,.18);
+    border-radius: 4px;
+    padding: 2rem;
+  }
+  .info-row { margin-bottom: 1.5rem; }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label {
+    font-size: 0.78rem;
+    color: var(--saffron);
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+  .info-value { font-size: 1.02rem; }
+  .hours-table { width: 100%; font-size: 0.92rem; }
+  .hours-table td { padding: 0.25rem 0; }
+  .hours-table td:last-child {
+    text-align: right;
+    color: rgba(247,241,230,.75);
+  }
+  .hours-table tr.today td { color: var(--saffron); font-weight: 600; }
+
+  /* ---------------- ABOUT ---------------- */
+  .about-section {
+    background: var(--cream);
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 820px) {
+    .about-section { grid-template-columns: 1fr; }
+  }
+  .about-img { /* TODO IMAGE: storefront or the person behind the counter */
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+  }
+  .about-text h2 {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 3vw, 2.3rem);
+    font-weight: 600;
+    margin-bottom: 1.1rem;
+  }
+  .about-text p {
+    color: rgba(36,27,18,.72);
+    margin-bottom: 1rem;
+    max-width: 55ch;
+  }
+  .about-tags {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .about-tags span {
+    border: 1px solid rgba(36,27,18,.2);
+    padding: 0.35rem 0.8rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
+  }
+
+  /* ---------------- FOOTER / CONTACT ---------------- */
+  footer {
+    background: var(--charcoal);
+    color: rgba(247,241,230,.65);
+    padding: 3rem 0 2rem;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(247,241,230,.12);
+    margin-bottom: 1.25rem;
+  }
+  .footer-name {
+    font-family: var(--display);
+    color: var(--paper);
+    font-size: 1.1rem;
+  }
+  .footer-links { display: flex; gap: 1.25rem; font-size: 0.9rem; }
+  .footer-bottom {
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-name">Beirut <span>Kebab</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#find-us">Find Us</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a class="nav-call" href="tel:+4722171692">Call to order</a>
+      <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">Menu</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HOME / HERO ============ -->
+<section id="home" class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <h1>Kebab, burger &amp; pizza, <em>done properly</em>, ‘til late.</h1>
+      <p class="lede">A Smalgangen staple for fresh shawarma, wood-fire-style pizza, and falafel made the same way every day — open until 1am, and 4am on weekends.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#menu">See the menu</a>
+        <a class="btn btn-ghost" href="#find-us">Find us</a>
+      </div>
+      <div class="hero-facts">
+        <div><strong>10:00–01:00</strong>Mon–Thu, Sun</div>
+        <div><strong>10:00–04:00</strong>Fri–Sat</div>
+        <div><strong>Smalgangen 44</strong>0188 Oslo</div>
+      </div>
+    </div>
+    <!-- TODO IMAGE: hero shot — the pizza or a shawarma being carved, this is the first thing people see -->
+    <div class="img-placeholder hero-img">your best food photo here<br>(pizza slice or shawarma carving works great)</div>
+  </div>
+</section>
+
+<!-- quick info strip -->
+<div class="quickbar">
+  <div class="wrap">
+    <span>Smalgangen 44, 0188 Oslo</span>
+    <span class="dot">•</span>
+    <span>+47 22 17 16 92</span>
+    <span class="dot">•</span>
+    <span>Open daily</span>
+  </div>
+</div>
+
+<!-- ============ MENU ============ -->
+<section id="menu" class="menu-section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What's on the menu</h2>
+      <p>Prices are placeholders — swap in your real ones. Add or remove items freely, the layout adjusts on its own.</p>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-cat">
+        <h3>Kebab</h3>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Kebab in pita</div>
+            <div class="menu-item-desc">Chicken or lamb, fresh vegetables, garlic sauce</div>
+          </div>
+          <div class="menu-item-price">kr 99</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Kebab tallerken</div>
+            <div class="menu-item-desc">Served on a plate with rice or fries</div>
+          </div>
+          <div class="menu-item-price">kr 139</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Sish kebab rull</div>
+            <div class="menu-item-desc">Grilled skewer, wrapped in soft tortilla</div>
+          </div>
+          <div class="menu-item-price">kr 119</div>
+        </div>
+      </div>
+
+      <div class="menu-cat">
+        <h3>Pizza</h3>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Kebab pizza</div>
+            <div class="menu-item-desc">The house favorite — ask any regular</div>
+          </div>
+          <div class="menu-item-price">kr 159</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Margherita</div>
+            <div class="menu-item-desc">Tomato, mozzarella, fresh basil</div>
+          </div>
+          <div class="menu-item-price">kr 129</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Chicken special</div>
+            <div class="menu-item-desc">Smoky grilled chicken, extra cheese</div>
+          </div>
+          <div class="menu-item-price">kr 169</div>
+        </div>
+      </div>
+
+      <div class="menu-cat">
+        <h3>Burgers</h3>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Beirut burger</div>
+            <div class="menu-item-desc">Beef patty, house sauce, pickles</div>
+          </div>
+          <div class="menu-item-price">kr 119</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Crispy chicken burger</div>
+            <div class="menu-item-desc">Fried chicken fillet, slaw, spicy mayo</div>
+          </div>
+          <div class="menu-item-price">kr 129</div>
+        </div>
+      </div>
+
+      <div class="menu-cat">
+        <h3>Sides &amp; more</h3>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Falafel (6 pcs)</div>
+            <div class="menu-item-desc">Made fresh, served with tahini</div>
+          </div>
+          <div class="menu-item-price">kr 79</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Fries</div>
+            <div class="menu-item-desc">Regular or with kebab meat on top</div>
+          </div>
+          <div class="menu-item-price">kr 59</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Soft drink</div>
+            <div class="menu-item-desc">0.5L bottle</div>
+          </div>
+          <div class="menu-item-price">kr 35</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="menu-note">Full menu and daily specials in store — this page covers the essentials. Ask about combo deals at the counter.</p>
+  </div>
+</section>
+
+<!-- ============ FIND US ============ -->
+<section id="find-us" class="findus-section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Find us</h2>
+      <p>Right on Smalgangen — easy to spot, easy to get to.</p>
+    </div>
+
+    <div class="findus-grid">
+      <div class="map-embed">
+        <!-- Google Maps embed — already pointed at the real location -->
+        <iframe
+          src="https://www.google.com/maps?q=Beirut+Kebab,Smalgangen+44,0188+Oslo&output=embed"
+          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-label">Address</div>
+          <div class="info-value">Smalgangen 44, 0188 Oslo</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Phone</div>
+          <div class="info-value"><a href="tel:+4722171692">+47 22 17 16 92</a></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Opening hours</div>
+          <table class="hours-table">
+            <tr><td>Monday</td><td>10:00 – 01:00</td></tr>
+            <tr><td>Tuesday</td><td>10:00 – 01:00</td></tr>
+            <tr><td>Wednesday</td><td>10:00 – 01:00</td></tr>
+            <tr><td>Thursday</td><td>10:00 – 01:00</td></tr>
+            <tr><td>Friday</td><td>10:00 – 04:00</td></tr>
+            <tr><td>Saturday</td><td>10:00 – 04:00</td></tr>
+            <tr><td>Sunday</td><td>10:00 – 01:00</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="wrap about-section">
+  <!-- TODO IMAGE: storefront front, or the owner/staff behind the counter -->
+  <div class="img-placeholder about-img">storefront or staff photo here</div>
+  <div class="about-text">
+    <h2>A neighborhood spot, run properly</h2>
+    <p>Beirut Kebab has been serving Smalgangen with fresh kebab, pizza, and burgers — the kind of place regulars come back to, whether it's lunch or a 2am craving. Replace this paragraph with the real story: how long you've been open, what makes your food different, anything customers should know before their first visit.</p>
+    <p>Everything is prepared fresh, and the counter staff will help you build a plate that actually fits what you're hungry for.</p>
+    <div class="about-tags">
+      <span>Fresh daily</span>
+      <span>Halal</span>
+      <span>Dine-in &amp; takeaway</span>
+      <span>Open late</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-name">Beirut Kebab</div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#find-us">Find Us</a>
+        <a href="#about">About</a>
+      </div>
+    </div>
+    <div class="wrap footer-bottom" style="padding:0;">
+      <span>Smalgangen 44, 0188 Oslo · +47 22 17 16 92</span>
+      <span>Site by you — swap this line or remove it</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
